@@ -1,51 +1,127 @@
 <!---
 {
-  "depends_on": [],
+  "id": "e2c108ad-125e-45ac-8fe1-d2e3b13f48eb",
+  "depends_on": ["objects", "operator overloading", "methods"],
   "author": "Stephan Bökelmann",
-  "first_used": "2025-03-17",
-  "keywords": ["learning", "exercises", "education", "practice"]
+  "first_used": "2025-05-20",
+  "keywords": ["C++", "Functors", "Function Objects", "Operator Overloading"]
 }
 --->
 
-# Learning Through Exercises
+# Understanding Functors in C++
 
-## Introduction
-Learning by doing is one of the most effective methods to acquire new knowledge and skills. Rather than passively consuming information, actively engaging in problem-solving fosters deeper understanding and long-term retention. By working through structured exercises, students can grasp complex concepts in a more intuitive and applicable way. This approach is particularly beneficial in technical fields like programming, mathematics, and engineering.
+> In this exercise you will learn what functors (function objects) are in C++. Furthermore we will explore how to implement and use them in different contexts, especially with the Standard Template Library (STL).
+
+### Introduction
+
+Functors, or function objects, are objects in C++ that behave like functions. This functionality is achieved by overloading the function call operator `operator()`, enabling objects of a class or struct to be used with function-call syntax. Functors are a core feature in C++ for writing flexible and efficient code, especially within generic programming and the STL.
+
+One of the key advantages of functors is that they can maintain **internal state**. Unlike plain functions, which rely solely on parameters, a functor can store information in member variables and use this information when invoked. This stateful behavior makes functors more versatile and reusable. For example, you can design a functor that keeps track of how many times it has been called, or one that adds a fixed value to inputs based on a constructor argument.
+
+Functors are especially useful when you need function-like behavior with the added power of encapsulated state and logic. In many STL algorithms like `std::sort`, `std::for_each`, and `std::transform`, functors serve as custom behaviors that can be passed into these algorithms for powerful and concise logic control.
+
+Mastering functors builds a strong foundation for writing clean, object-oriented, and reusable C++ code. Their stateless and stateful variations provide great flexibility in real-world applications.
 
 ### Further Readings and Other Sources
-- [The Importance of Practice in Learning](https://www.sciencedirect.com/science/article/pii/S036013151300062X)
-- "The Art of Learning" by Josh Waitzkin
-- [How to Learn Effectively: 5 Key Strategies](https://www.edutopia.org/article/5-research-backed-learning-strategies)
 
-## Tasks
-1. **Write a Summary**: Summarize the concept of "learning by doing" in 3-5 sentences.
-2. **Example Identification**: List three examples from your own experience where learning through exercises helped you understand a topic better.
-3. **Create an Exercise**: Design a simple exercise for a topic of your choice that someone else could use to practice.
-4. **Follow an Exercise**: Find an online tutorial that includes exercises and complete at least two of them.
-5. **Modify an Existing Exercise**: Take a basic problem from a textbook or online course and modify it to make it slightly more challenging.
-6. **Pair Learning**: Explain a concept to a partner and guide them through an exercise without giving direct answers.
-7. **Review Mistakes**: Look at an exercise you've previously completed incorrectly. Identify why the mistake happened and how to prevent it in the future.
-8. **Time Challenge**: Set a timer for 10 minutes and try to solve as many simple exercises as possible on a given topic.
-9. **Self-Assessment**: Create a checklist to evaluate your own performance in completing exercises effectively.
-10. **Reflect on Progress**: Write a short paragraph on how this structured approach to exercises has influenced your learning.
+* [cppreference on Function Objects](https://en.cppreference.com/w/cpp/named_req/FunctionObject)
+* Josuttis, N. (2012). *The C++ Standard Library: A Tutorial and Reference*.
+* [https://www.learncpp.com/cpp-tutorial/functors/](https://www.learncpp.com/cpp-tutorial/functors/) (LearnCpp on Functors)
+* [https://www.youtube.com/watch?v=nbTSfrEfo6M](https://www.youtube.com/watch?v=nbTSfrEfo6M) (YouTube tutorial on functors)
 
-<details>
-  <summary>Tip for Task 5</summary>
-  Try making small adjustments first, such as increasing the difficulty slightly or adding an extra constraint.
-</details>
+---
 
-## Questions
-1. What are the main benefits of learning through exercises compared to passive learning?
-2. How do exercises improve long-term retention?
-3. Can you think of a subject where learning through exercises might be less effective? Why?
-4. What role does feedback play in learning through exercises?
-5. How can self-designed exercises improve understanding?
-6. Why is it beneficial to review past mistakes in exercises?
-7. How does explaining a concept to someone else reinforce your own understanding?
-8. What strategies can you use to stay motivated when practicing with exercises?
-9. How can timed challenges contribute to learning efficiency?
-10. How do exercises help bridge the gap between theory and practical application?
+### Tasks
 
-## Advice
-Practice consistently and seek out diverse exercises that challenge different aspects of a topic. Combine exercises with reflection and feedback to maximize your learning efficiency. Don't hesitate to adapt exercises to fit your own needs and ensure that you're actively engaging with the material, rather than just going through the motions.
+#### Task 1: Creating a Simple Functor
 
+1. Open your `vim` editor and create a file named `functor_basic.cpp`.
+2. Write a class `Multiplier` with an overloaded `operator()` that multiplies two integers.
+
+```cpp
+#include <iostream>
+
+class Multiplier {
+public:
+    int operator()(int a, int b) {
+        return a * b;
+    }
+};
+
+int main() {
+    Multiplier mult;
+    std::cout << "3 * 4 = " << mult(3, 4) << std::endl;
+    return 0;
+}
+```
+
+#### Task 2: Stateful Functor
+
+This task demonstrates how functors can **maintain internal state**.
+
+1. Create a file named `functor_stateful.cpp`.
+2. Create a class `Adder` that stores an internal integer offset and adds it to each input.
+
+```cpp
+#include <iostream>
+
+class Adder {
+    int offset;
+public:
+    Adder(int o) : offset(o) {}
+
+    int operator()(int x) {
+        return x + offset;
+    }
+};
+
+int main() {
+    Adder add5(5);
+    std::cout << "10 + 5 = " << add5(10) << std::endl;
+    return 0;
+}
+```
+
+#### Task 3: Using Functors with STL Algorithms
+
+1. File: `functor_sort.cpp`
+2. Create a custom comparator functor to sort a vector of strings by descending length.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+struct DescLength {
+    bool operator()(const std::string &a, const std::string &b) {
+        return a.size() > b.size();
+    }
+};
+
+int main() {
+    std::vector<std::string> words = {"apple", "banana", "fig", "grape"};
+    std::sort(words.begin(), words.end(), DescLength());
+
+    for (const auto &word : words) {
+        std::cout << word << " ";
+    }
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+---
+
+### Questions
+
+1. What is the difference between a functor and a function pointer?
+2. How can functors maintain internal state?
+3. What are the benefits of using functors over plain functions?
+4. When would you use a functor in STL algorithms?
+5. Can a functor be used as a template argument? Provide an example.
+
+---
+
+### Advice
+
+Think of functors as a hybrid between functions and objects. They allow you to encapsulate both behavior and data in a single callable entity. Practice using them in scenarios where you need operations to carry configuration or context. Functors are excellent for writing expressive and modular code in STL pipelines. Once you are comfortable with functors, you may also want to explore our [exercise sheet on lambda expressions](#) for a more modern and concise alternative to function objects in C++.
