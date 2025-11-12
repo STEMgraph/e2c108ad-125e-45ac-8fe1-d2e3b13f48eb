@@ -1,6 +1,7 @@
 <!---
 {
   "id": "e2c108ad-125e-45ac-8fe1-d2e3b13f48eb",
+  "teaches": "Understanding Functors in C++",
   "depends_on": ["objects", "operator overloading", "methods"],
   "author": "Stephan Bökelmann",
   "first_used": "2025-05-20",
